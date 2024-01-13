@@ -7,29 +7,29 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.project.newsgo.R
-import com.project.newsgo.databinding.FragmentHomeBinding
-import com.project.newsgo.ui.viewmodels.HomeFragmentViewModel
-import dagger.hilt.android.AndroidEntryPoint
+import com.project.newsgo.databinding.FragmentDetailBinding
+import com.project.newsgo.databinding.FragmentFavoriteBinding
+import com.project.newsgo.ui.viewmodels.DetailFragmentViewModel
+import com.project.newsgo.ui.viewmodels.FavoriteFragmentViewModel
 
-@AndroidEntryPoint
-class HomeFragment : Fragment() {
-    private var _binding: FragmentHomeBinding? = null
+class DetailFragment : Fragment() {
+    private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: HomeFragmentViewModel
+
+    private lateinit var viewModel: DetailFragmentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val tempViewModel: HomeFragmentViewModel by viewModels()
+        val tempViewModel: DetailFragmentViewModel by viewModels()
         viewModel = tempViewModel
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return inflater.inflate(R.layout.fragment_detail, container, false)
     }
 
 

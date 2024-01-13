@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.project.newsgo.R
 import com.project.newsgo.databinding.FragmentFavoriteBinding
+import com.project.newsgo.databinding.FragmentHomeBinding
 import com.project.newsgo.ui.viewmodels.FavoriteFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,8 +31,9 @@ class FavoriteFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-
-        return inflater.inflate(R.layout.fragment_favorite, container, false)
+        _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
 
