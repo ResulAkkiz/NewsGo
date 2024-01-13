@@ -9,6 +9,7 @@
     <color name="unSelectedIndicator">#FFD7D4</color>
     <color name="selectedIndicator">#FF8982</color>
     <color name="titleTextColor">#343434</color>
+    <color name="fabColor">#FFD180</color>
     <color name="borderTextColor">#0384C6</color>
     <color name="borderTextShadowColor">#E0F0F8</color>
     <color name="borderNotFocusedTextColor">#E4E4E4</color>

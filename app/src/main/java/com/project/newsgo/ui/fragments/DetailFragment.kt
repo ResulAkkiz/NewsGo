@@ -62,6 +62,14 @@ class DetailFragment : Fragment() {
                 viewModel.deleteFavorite(news)
             }
         }
+        binding.goSourceButton.setOnClickListener {
+            if (!news.url.isNullOrBlank()){
+                val direction =
+                    DetailFragmentDirections.actionDetailFragmentToSourceFragment(news.url)
+                Navigation.findNavController(view).navigate(direction)
+            }
+
+        }
         viewModel.checkFavorited(news)
         viewModel.isFavorite.observe(viewLifecycleOwner) { result ->
             when (result) {

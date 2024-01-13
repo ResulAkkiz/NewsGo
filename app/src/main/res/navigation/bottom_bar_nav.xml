@@ -31,5 +31,17 @@
         <argument
             android:name="newsArg"
             app:argType="com.project.newsgo.data.entity.Article" />
+        <action
+            android:id="@+id/action_detailFragment_to_sourceFragment"
+            app:destination="@id/sourceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/sourceFragment"
+        android:name="com.project.newsgo.ui.fragments.SourceFragment"
+        android:label="fragment_source"
+        tools:layout="@layout/fragment_source" >
+        <argument
+            android:name="source"
+            app:argType="string" />
     </fragment>
 </navigation>
