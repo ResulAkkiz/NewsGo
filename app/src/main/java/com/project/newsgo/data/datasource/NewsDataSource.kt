@@ -1,5 +1,6 @@
 package com.project.newsgo.data.datasource
 
+import com.project.newsgo.data.entity.News
 import com.project.newsgo.retrofit.NewsDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,9 +10,9 @@ class NewsDataSource(var newsDao: NewsDao) {
 
     suspend fun getNews(
         query: String, page: Int,
-    ) = withContext(
+    ): News = withContext(
         Dispatchers.IO
     ) {
-        val response = newsDao.getNews(query, page, API_KEY)
+        return@withContext newsDao.getNews(query, page, API_KEY)
     }
 }

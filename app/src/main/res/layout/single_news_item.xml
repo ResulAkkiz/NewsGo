@@ -48,7 +48,7 @@
 
 
             <TextView
-                android:id="@+id/newTitleTextView"
+                android:id="@+id/newsTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_semibold"
@@ -57,7 +57,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/petNameTextView"
+                android:id="@+id/newsContentTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat"

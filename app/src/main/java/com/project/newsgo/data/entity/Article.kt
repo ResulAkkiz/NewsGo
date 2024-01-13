@@ -2,6 +2,7 @@ package com.project.newsgo.data.entity
 
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Article(
     @SerializedName("author")
@@ -19,5 +20,33 @@ data class Article(
     @SerializedName("url")
     val url: String,
     @SerializedName("urlToImage")
-    val urlToImage: String
-)
+    val urlToImage: String,
+) : Serializable {
+    companion object {
+        fun fromMap(map: Map<String, Any>): Article {
+            return Article(
+                author = map["author"] as String,
+                content = map["content"] as String,
+                description = map["description"] as String,
+                publishedAt = map["publishedAt"] as String,
+                source = Source.fromMap(map["source"] as Map<String, Any>),
+                title = map["title"] as String,
+                url = map["url"] as String,
+                urlToImage = map["urlToImage"] as String
+            )
+        }
+    }
+
+    fun toMap(): Map<String, Any> {
+        return mapOf(
+            "author" to author,
+            "content" to content,
+            "description" to description,
+            "publishedAt" to publishedAt,
+            "source" to source.toMap(),
+            "title" to title,
+            "url" to url,
+            "urlToImage" to urlToImage
+        )
+    }
+}
