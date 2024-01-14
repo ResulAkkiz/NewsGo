@@ -2,6 +2,7 @@ package com.project.newsgo.ui.fragments
 
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,8 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var viewModel: HomeFragmentViewModel
     private val handler = Handler()
+    private var query: String = "Android"
+    val visibleThreshold = 2
     private var searchRunnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,16 +40,35 @@ class HomeFragment : Fragment() {
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
-        binding.newsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        val layoutManager = LinearLayoutManager(requireContext())
+        val newsRecyclerView=binding.newsRecyclerView
+        newsRecyclerView.layoutManager = layoutManager
         binding.progressBar2.visibility = View.VISIBLE
         viewModel.news.observe(viewLifecycleOwner) { listArticle ->
-            binding.newsRecyclerView.adapter =
-                NewsRecyclerViewAdapter(listArticle, requireContext()){
-                    val direction= HomeFragmentDirections.actionHomeFragmentToDetailFragment(it)
+            newsRecyclerView.adapter =
+                NewsRecyclerViewAdapter(listArticle, requireContext()) {
+                    val direction = HomeFragmentDirections.actionHomeFragmentToDetailFragment(it)
                     Navigation.findNavController(view).navigate(direction)
                 }
             binding.progressBar2.visibility = View.GONE
         }
+
+        newsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                Log.e("TAG", "Scrolll!!")
+//                val visibleItemCount = layoutManager.childCount
+//                val totalItemCount = layoutManager.itemCount
+//                val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+//
+//                if (visibleItemCount + pastVisibleItems >= totalItemCount) {
+//
+//                }
+
+
+            }
+        })
+
 
 
 
@@ -56,10 +78,13 @@ class HomeFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+
                 searchRunnable?.let { handler.removeCallbacks(it) }
                 searchRunnable = Runnable {
                     if (!newText.isNullOrBlank()) {
-                        viewModel.getNews(newText, 1)
+                        query = newText
+                        viewModel.currentPage = 1
+                        viewModel.getNews(query, viewModel.currentPage)
                     }
                 }.also { handler.postDelayed(it, 1000) }
 
@@ -70,6 +95,8 @@ class HomeFragment : Fragment() {
         })
         return view
     }
+
+
 
 
 }

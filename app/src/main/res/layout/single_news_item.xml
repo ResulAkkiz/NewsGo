@@ -31,7 +31,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/news_placeholder_ic"
+                android:src="@drawable/newsplaceholder_ic"
                 android:contentDescription="TODO">
 
             </ImageView>

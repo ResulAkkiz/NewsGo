@@ -15,17 +15,26 @@ import javax.inject.Inject
 class HomeFragmentViewModel @Inject constructor(
     private var newsRepository: NewsRepository,
 ) : ViewModel() {
-
+    var currentPage = 1
     val news = MutableLiveData<List<Article>>()
 
     init {
-        getNews("bitcoin", 1)
+        getNews("android", currentPage)
+    }
+
+    fun getMoreNews(query: String) {
+        currentPage++
+        getNews(query, currentPage)
     }
 
     fun getNews(query: String, page: Int) {
         CoroutineScope(Dispatchers.Main).launch {
             val result = newsRepository.getNews(query, page)
-            news.value = result.articles
+            if (page > 1) {
+                news.value = news.value?.plus(result.articles)
+            } else {
+                news.value = result.articles
+            }
         }
     }
 

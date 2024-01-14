@@ -47,7 +47,7 @@ class DetailFragment : Fragment() {
         val news = bundle.newsArg
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
         val view=binding.root
-        Glide.with(requireContext()).load(news.urlToImage).into(binding.newsImageView);
+        Glide.with(requireContext()).load(news.urlToImage).error(R.drawable.newsplaceholder_ic).into(binding.newsImageView);
         binding.newsTitleTextView.text=news.title
         binding.newsContentTextView.text=news.description
         binding.authorNameTextView.text=news.author

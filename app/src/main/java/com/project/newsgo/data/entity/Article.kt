@@ -20,7 +20,7 @@ data class Article(
     @SerializedName("url")
     val url: String,
     @SerializedName("urlToImage")
-    val urlToImage: String,
+    val urlToImage: String?,
 ) : Serializable {
     companion object {
         fun fromMap(map: Map<String, Any>): Article {
@@ -37,7 +37,7 @@ data class Article(
         }
     }
 
-    fun toMap(): Map<String, Any> {
+    fun toMap(): Map<String, Any?> {
         return mapOf(
             "author" to author,
             "content" to content,

@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName
 
 data class Source(
     @SerializedName("id")
-    val id: Any,
+    val id: Any?,
     @SerializedName("name")
     val name: String
 ){
-    fun toMap(): Map<String, Any> {
+    fun toMap(): Map<String, Any?> {
         return mapOf(
             "id" to id,
             "name" to name

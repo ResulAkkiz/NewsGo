@@ -10,6 +10,7 @@ interface NewsDao {
     suspend fun getNews(
         @Query("q") query: String,
         @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int,
         @Query("apiKey") apiKey: String,
     ): News
 
