@@ -19,7 +19,7 @@ class HomeFragmentViewModel @Inject constructor(
     var isLoading = false
     var currentPage = 1
     var query = "Android"
-    val news = MutableLiveData<List<Article>>()
+    var news = MutableLiveData<List<Article>>()
 
     init {
         getNews()

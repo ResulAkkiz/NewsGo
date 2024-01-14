@@ -6,7 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class NewsDataSource(var newsDao: NewsDao) {
-    private val API_KEY = "b5b871bae44141f8b69cabe3e2b8e9fd"
+    private val API_KEY = "21bf0622f85e4de0a4756ac5ccada727"
     private val PAGE_SIZE = 20
 
     suspend fun getNews(

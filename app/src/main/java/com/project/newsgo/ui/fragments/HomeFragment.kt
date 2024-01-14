@@ -3,16 +3,17 @@ package com.project.newsgo.ui.fragments
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.project.newsgo.R
+import com.project.newsgo.data.entity.Article
 import com.project.newsgo.databinding.FragmentHomeBinding
 import com.project.newsgo.ui.adapters.NewsRecyclerViewAdapter
 import com.project.newsgo.ui.viewmodels.HomeFragmentViewModel
@@ -33,6 +34,7 @@ class HomeFragment : Fragment() {
         viewModel.getNews()
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -42,22 +44,22 @@ class HomeFragment : Fragment() {
         val layoutManager = LinearLayoutManager(requireContext())
         val newsRecyclerView = binding.newsRecyclerView
         newsRecyclerView.layoutManager = layoutManager
-        Log.e("TAG","onCreate")
+        Log.e("TAG", "onCreate")
         viewModel.news.observe(viewLifecycleOwner) { listArticle ->
 
             if (viewModel.currentPage == 1) {
-                Log.e("TAG","if ")
+                Log.e("TAG", "if ")
                 val adapter = NewsRecyclerViewAdapter(listArticle, requireContext()) {
                     val direction = HomeFragmentDirections.actionHomeFragmentToDetailFragment(it)
                     Navigation.findNavController(view).navigate(direction)
                 }
                 newsRecyclerView.adapter = adapter
             } else {
-                Log.e("TAG","else ")
-                Log.e("TAG","${listArticle.size}")
+                Log.e("TAG", "else ")
+                Log.e("TAG", "${listArticle.size}")
                 (newsRecyclerView.adapter as? NewsRecyclerViewAdapter)?.updateData(listArticle)
             }
-            binding.progressBar2.visibility=View.GONE
+            binding.progressBar2.visibility = View.GONE
 
         }
 
@@ -97,6 +99,12 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        resetPage()
         _binding = null
+    }
+
+    private fun resetPage() {
+        viewModel.currentPage = 1
+        viewModel.news = MutableLiveData<List<Article>>()
     }
 }
