@@ -24,8 +24,8 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var viewModel: HomeFragmentViewModel
     private val handler = Handler()
-    private var query: String = "Android"
-    val visibleThreshold = 2
+
+    val visibleThreshold = 3
     private var searchRunnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,31 +41,33 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
         val layoutManager = LinearLayoutManager(requireContext())
-        val newsRecyclerView=binding.newsRecyclerView
+        val newsRecyclerView = binding.newsRecyclerView
         newsRecyclerView.layoutManager = layoutManager
         binding.progressBar2.visibility = View.VISIBLE
+
         viewModel.news.observe(viewLifecycleOwner) { listArticle ->
-            newsRecyclerView.adapter =
-                NewsRecyclerViewAdapter(listArticle, requireContext()) {
-                    val direction = HomeFragmentDirections.actionHomeFragmentToDetailFragment(it)
-                    Navigation.findNavController(view).navigate(direction)
-                }
+
+            val adapter = NewsRecyclerViewAdapter(listArticle, requireContext()) {
+                val direction = HomeFragmentDirections.actionHomeFragmentToDetailFragment(it)
+                Navigation.findNavController(view).navigate(direction)
+            }
+            newsRecyclerView.adapter = adapter
             binding.progressBar2.visibility = View.GONE
         }
 
         newsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                Log.e("TAG", "Scrolll!!")
-//                val visibleItemCount = layoutManager.childCount
-//                val totalItemCount = layoutManager.itemCount
-//                val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-//
-//                if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-//
-//                }
+
+                val totalItemCount = layoutManager.itemCount
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+
+                if (!viewModel.isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                    viewModel.currentPage++
+                    viewModel.getNews()
 
 
+                }
             }
         })
 
@@ -82,9 +84,9 @@ class HomeFragment : Fragment() {
                 searchRunnable?.let { handler.removeCallbacks(it) }
                 searchRunnable = Runnable {
                     if (!newText.isNullOrBlank()) {
-                        query = newText
+                        viewModel.query = newText
                         viewModel.currentPage = 1
-                        viewModel.getNews(query, viewModel.currentPage)
+                        viewModel.getNews()
                     }
                 }.also { handler.postDelayed(it, 1000) }
 
@@ -95,8 +97,6 @@ class HomeFragment : Fragment() {
         })
         return view
     }
-
-
 
 
 }
