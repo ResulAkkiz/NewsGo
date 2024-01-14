@@ -61,9 +61,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat"
+                android:maxLines="4"
                 android:text="@string/news_content_placeholder"
                 android:textColor="@color/black"
                 android:textSize="12sp" />
+
+            <View
+                android:background="@color/primaryColor"
+                android:layout_width="match_parent"
+                android:layout_height="2dp">
+            </View>
+            <TextView
+                android:id="@+id/sourceTextView"
+                android:layout_gravity="end"
+                android:text="(Source)"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </TextView>
 
         </LinearLayout>
 

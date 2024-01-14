@@ -50,7 +50,7 @@ class DetailFragment : Fragment() {
         Glide.with(requireContext()).load(news.urlToImage).error(R.drawable.newsplaceholder_ic).into(binding.newsImageView);
         binding.newsTitleTextView.text=news.title
         binding.newsContentTextView.text=news.description
-        binding.authorNameTextView.text=news.author
+        binding.authorNameTextView.text=truncateText(news.author)
         binding.dateTextView.text=convertDateTime(news.publishedAt)
         binding.backButton.setOnClickListener {
             Navigation.findNavController(it).popBackStack()
@@ -100,6 +100,14 @@ class DetailFragment : Fragment() {
 
         val dateTime = LocalDateTime.parse(input, inputFormatter)
         return dateTime.format(outputFormatter)
+    }
+
+    fun truncateText(text: String, maxLength: Int = 15): String {
+        return if (text.length > maxLength) {
+            text.substring(0, maxLength) + "..."
+        } else {
+            text
+        }
     }
 
 

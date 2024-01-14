@@ -19,7 +19,7 @@ data class Source(
     companion object {
         fun fromMap(map: Map<String, Any>): Source {
             return Source(
-                id = map["id"] as String,
+                id = map["id"] as String?,
                 name = map["name"] as String
             )
         }

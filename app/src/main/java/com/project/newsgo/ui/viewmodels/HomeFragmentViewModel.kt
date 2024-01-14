@@ -1,5 +1,6 @@
 package com.project.newsgo.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.project.newsgo.data.entity.Article
@@ -15,26 +16,33 @@ import javax.inject.Inject
 class HomeFragmentViewModel @Inject constructor(
     private var newsRepository: NewsRepository,
 ) : ViewModel() {
+    var isLoading = false
     var currentPage = 1
+    var query = "Android"
     val news = MutableLiveData<List<Article>>()
 
     init {
-        getNews("android", currentPage)
+        getNews()
     }
 
-    fun getMoreNews(query: String) {
-        currentPage++
-        getNews(query, currentPage)
-    }
-
-    fun getNews(query: String, page: Int) {
+    fun getNews() {
         CoroutineScope(Dispatchers.Main).launch {
-            val result = newsRepository.getNews(query, page)
-            if (page > 1) {
-                news.value = news.value?.plus(result.articles)
-            } else {
-                news.value = result.articles
+            if (isLoading) return@launch
+
+            isLoading = true
+            CoroutineScope(Dispatchers.Main).launch {
+                try {
+                    val result = newsRepository.getNews(query, currentPage)
+                    val currentNews = news.value ?: listOf()
+                    news.value = if (currentPage > 1) currentNews + result.articles else result.articles
+                } catch (e: Exception) {
+                    Log.e("HomeFragmentViewModel", "Error fetching news: ${e.message}")
+
+                } finally {
+                    isLoading = false
+                }
             }
+
         }
     }
 

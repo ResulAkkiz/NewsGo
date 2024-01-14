@@ -14,6 +14,7 @@ import com.project.newsgo.data.entity.Article
 import com.project.newsgo.databinding.FragmentFavoriteBinding
 import com.project.newsgo.databinding.FragmentHomeBinding
 import com.project.newsgo.firebase.FirebaseFirestoreResult
+import com.project.newsgo.ui.adapters.FavoriteRecyclerViewAdapter
 import com.project.newsgo.ui.adapters.NewsRecyclerViewAdapter
 import com.project.newsgo.ui.viewmodels.FavoriteFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,7 +52,7 @@ class FavoriteFragment : Fragment() {
                 is FirebaseFirestoreResult.Success<*> -> {
                     if (result.data is List<*>) {
                         binding.favoritesRecyclerView.adapter =
-                            NewsRecyclerViewAdapter(
+                            FavoriteRecyclerViewAdapter(
                                 result.data as List<Article>,
                                 requireContext()
                             ) {
@@ -66,7 +67,7 @@ class FavoriteFragment : Fragment() {
                 }
 
                 is FirebaseFirestoreResult.Failure -> {
-                    Log.e("TAG", "Hata meydana geldi")
+                    Log.e("TAG", result.error)
                 }
             }
 

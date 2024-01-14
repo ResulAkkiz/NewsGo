@@ -32,7 +32,7 @@ data class Article(
                 source = Source.fromMap(map["source"] as Map<String, Any>),
                 title = map["title"] as String,
                 url = map["url"] as String,
-                urlToImage = map["urlToImage"] as String
+                urlToImage = map["urlToImage"] as String?
             )
         }
     }

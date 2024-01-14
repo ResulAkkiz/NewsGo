@@ -22,16 +22,15 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: HomeFragmentViewModel
+    private val viewModel: HomeFragmentViewModel by viewModels()
     private val handler = Handler()
-    private var query: String = "Android"
-    val visibleThreshold = 2
+
+    val visibleThreshold = 3
     private var searchRunnable: Runnable? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val tempViewModel: HomeFragmentViewModel by viewModels()
-        viewModel = tempViewModel
+    override fun onResume() {
+        super.onResume()
+        viewModel.getNews()
     }
 
     override fun onCreateView(
@@ -41,36 +40,40 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
         val layoutManager = LinearLayoutManager(requireContext())
-        val newsRecyclerView=binding.newsRecyclerView
+        val newsRecyclerView = binding.newsRecyclerView
         newsRecyclerView.layoutManager = layoutManager
-        binding.progressBar2.visibility = View.VISIBLE
+        Log.e("TAG","onCreate")
         viewModel.news.observe(viewLifecycleOwner) { listArticle ->
-            newsRecyclerView.adapter =
-                NewsRecyclerViewAdapter(listArticle, requireContext()) {
+
+            if (viewModel.currentPage == 1) {
+                Log.e("TAG","if ")
+                val adapter = NewsRecyclerViewAdapter(listArticle, requireContext()) {
                     val direction = HomeFragmentDirections.actionHomeFragmentToDetailFragment(it)
                     Navigation.findNavController(view).navigate(direction)
                 }
-            binding.progressBar2.visibility = View.GONE
+                newsRecyclerView.adapter = adapter
+            } else {
+                Log.e("TAG","else ")
+                Log.e("TAG","${listArticle.size}")
+                (newsRecyclerView.adapter as? NewsRecyclerViewAdapter)?.updateData(listArticle)
+            }
+            binding.progressBar2.visibility=View.GONE
+
         }
+
 
         newsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                Log.e("TAG", "Scrolll!!")
-//                val visibleItemCount = layoutManager.childCount
-//                val totalItemCount = layoutManager.itemCount
-//                val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-//
-//                if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-//
-//                }
+                val totalItemCount = layoutManager.itemCount
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
 
-
+                if (!viewModel.isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                    viewModel.currentPage++
+                    viewModel.getNews()
+                }
             }
         })
-
-
-
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -78,25 +81,22 @@ class HomeFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-
                 searchRunnable?.let { handler.removeCallbacks(it) }
                 searchRunnable = Runnable {
                     if (!newText.isNullOrBlank()) {
-                        query = newText
+                        viewModel.query = newText
                         viewModel.currentPage = 1
-                        viewModel.getNews(query, viewModel.currentPage)
+                        viewModel.getNews()
                     }
                 }.also { handler.postDelayed(it, 1000) }
-
-
                 return true
             }
-
         })
         return view
     }
 
-
-
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
